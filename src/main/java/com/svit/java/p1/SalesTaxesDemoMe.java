@@ -52,7 +52,7 @@ class Tax{
 	/*
 	 * calculate total item tax
 	 */
-	public double calculateItemTaxRage() {
+	public double calculateItemTaxRate() {
 		// Use ceil(double/0.05) * 0.05 to round the sales tax up to the nearest 0.05
 		// return Math.ceil((this.saleTax + this.importTax)/0.05)*0.05;
 		return this.saleTax + this.importTax;
@@ -95,18 +95,22 @@ abstract class Goods implements Item{
 	
 	public double getGoodsTotalTax(){
 		//TODO
-		return 0.0;//placeholder
+		tax.calculateItemTax(isTaxable(), isImported(), price);
+		return quantity * this.tax.calculateItemTaxRate();
 	}
 	
 	public double getGoodsTotal() throws ItemException{
 		//TODO
-		return 0.0;//placeholder
+		if(tax == null)
+			throw new ItemException("Tax should be calculated first!");
+		return quantity * (this.tax.calculateItemTaxRate() + price);
 	}
 	
 	public String getDescription(){
 		return description;	
 	}
 	
+	@Override
 	public String toString(){
 		return (quantity + " " + description + ": ");	
 	}
@@ -179,7 +183,18 @@ class ItemsFactoryImp implements ItemsFactory{
 		Item item = null;
 		
 		//apply factory design pattern
-
+		if(itemType == Item.TYPE_BFM) {
+			item = new BFM(description, quantity, price);
+		}else if(itemType == Item.TYPE_BFM_IMPORT) {
+			item = new BFM(description, quantity, price);
+			item.setImported(true);
+		}else if(itemType == Item.TYPE_OTHER_GOODS) {
+			item = new OtherGoods(description, quantity, price);
+		}else if(itemType == Item.TYPE_OTHER_GOODS_IMPORT) {
+			item = new OtherGoods(description, quantity,price);
+			item.setImported(true);
+		}else
+			throw new ItemException("itemType : " + itemType + " is invalid.");
 			
 		return item;
 	}
