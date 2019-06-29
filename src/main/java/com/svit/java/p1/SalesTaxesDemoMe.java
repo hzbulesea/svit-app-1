@@ -24,13 +24,30 @@ class ItemException extends Exception{
  * Tax class
  */
 class Tax{
-	public static final double SALE_TAX = 0.10;
-	public static final double IMPORT_TAX = 0.05;
+	public static final double SALE_TAX = 0.10;		// 10%
+	public static final double IMPORT_TAX = 0.05;	// 5%
 	
 	private double saleTax = 0.0;
 	private double importTax = 0.0;
-	
-
+	/*
+	 * calculate item sale tax and import tax
+	 */
+	public void calculateItemTax(boolean isTaxable, boolean isImported, double price) {
+		if(isTaxable) {
+			saleTax = price * SALE_TAX;
+		}
+		if(isImported) {
+			importTax = price * IMPORT_TAX;
+		}
+	}
+	/*
+	 * calculate total item tax
+	 */
+	public double calculateItemTaxRage() {
+		// Use ceil(double/0.05) * 0.05 to round the sales tax up to the nearest 0.05
+		// return Math.ceil((this.saleTax + this.importTax)/0.05)*0.05;
+		return this.saleTax + this.importTax;
+	}
 }
 
 /*
@@ -38,7 +55,7 @@ class Tax{
  */
 interface Item{
 	public static final int TYPE_BFM = 1; //books, food and medical products
-	public static final int TYPE_OTHER_GOODS = 2;//all goods, except boos, food, and medical products
+	public static final int TYPE_OTHER_GOODS = 2;//all goods, except books, food, and medical products
 	public static final int TYPE_BFM_IMPORT = 3;//(imported)books, food and medical products
 	public static final int TYPE_OTHER_GOODS_IMPORT = 4; //(imported)all goods, except boos, food, and medical products
 	
