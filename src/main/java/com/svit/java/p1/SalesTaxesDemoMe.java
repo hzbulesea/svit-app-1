@@ -111,8 +111,7 @@ abstract class Goods implements Item {
 		// TODO
 		if (tax == null)
 			throw new ItemException("Tax should be calculated first!");
-		tax.calculateItemTax(isTaxable(), isImported(), price);
-		return quantity * this.tax.calculateItemTaxRate();
+		return quantity * (this.tax.calculateItemTaxRate() + price);
 	}
 
 	public String getDescription() {
